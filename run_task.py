@@ -22,6 +22,6 @@ def main():
         proc = subprocess.Popen(["/bin/bash","-c ","\'" + task["content"] + "\'"] , stdout=subprocess.PIPE)
     std, err = proc.communicate()
     print(std)    
-    requests.post("https://hitmanservice.azurewebsites.net/api/queue/boss-pi-back")
+
 if __name__ == "__main__":
     main()
