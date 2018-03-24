@@ -1,0 +1,13 @@
+[Unit]
+Description=Reverse SSH
+After=network.target
+ 
+[Service]
+ExecStart=/usr/bin/ssh -NR 30001:localhost:22 remoteUser@remote.com
+Restart=always
+RestartSec=5
+User=pi
+WorkingDirectory=/home/pi
+ 
+[Install]
+WantedBy=multi-user.target
