@@ -4,7 +4,7 @@ import subprocess
 
 def main():
     try:
-        response = requests.get("https://hitmanservice.azurewebsites.net/api/queue/boss-pi")
+        response = requests.get("https://hitmanservice.azurewebsites.net/api/queue/TEST-pi")
     except:
         print("Service unavailable")
         return
@@ -16,13 +16,16 @@ def main():
 
     task = response.json()
     print(task)
-    if task["mode"]=="command":
-        proc = subprocess.Popen(task["content"].split(" "), stdout=subprocess.PIPE)
-    elif task["mode"]=="script":
-        proc = subprocess.Popen(["/bin/bash","-c ","\'" + task["content"] + "\'"] , stdout=subprocess.PIPE)
-    std, err = proc.communicate()
-    print(std)
-    result = {"request" : task, "output" : std}
-    requests.post("https://hitmanservice.azurewebsites.net/api/queue/boss-pi-back",data = result)
+    outStr=""
+    try:
+        if task["mode"]=="command":
+            outStr = subprocess.check_output(task["content"].split(" "), stderr=subprocess.STDOUT)
+        elif task["mode"]=="script":
+            outStr = subprocess.check_output(["/bin/bash","-c ","\'" + task["content"] + "\'"], stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        outStr = "Error:: "+str(e.output)
+    result = {"request" : task, "output" : outStr }
+    print(result)
+    requests.post("https://hitmanservice.azurewebsites.net/api/queue/TEST-pi-back",data = str(result))
 if __name__ == "__main__":
     main()
