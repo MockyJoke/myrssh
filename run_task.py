@@ -11,7 +11,7 @@ def main():
         
     if response.status_code == 400:
         return
-    if response.status_code == 403:
+    if response.status_code == 404:
         return
 
     task = response.json()
